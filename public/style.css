@@ -1,0 +1,43 @@
+/* CSS files add styling rules to your content */
+
+body,
+html {
+  font-family: helvetica, arial, sans-serif;
+  margin: 10px;
+  background-color: black;
+  color: white;
+}
+
+h1 {
+  font-style: italic;
+  color: #ff0066;
+}
+
+button {
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px;
+  margin: 10px;
+  color: white;
+}
+
+main {
+  z-index: 1;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+main > * {
+  background-color: rgb(23 23 225 / 50%);
+  padding: 20px;
+}
+
+canvas {
+  z-index: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
