@@ -1,6 +1,5 @@
 //envia los eventos al servidor
 
-const socket = io();
 const canvas = document.getElementById("myCanvas");
 
 canvas.width = 1024;
@@ -42,8 +41,3 @@ osc(30, 0.05, 1.4)
   .modulateKaleid(osc(5), () => k)
   .out(o0);
 
-socket.on("hydra", function (data) {
-  console.log(data);
-});
-
-socket.emit("hydra", { data: data });

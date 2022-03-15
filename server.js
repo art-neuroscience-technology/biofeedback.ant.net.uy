@@ -4,6 +4,7 @@ var app = express();
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
 
+
 var admin = require("firebase-admin");
 // Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
@@ -28,17 +29,23 @@ admin.initializeApp({
 
 var db = admin.database();
 var ref = db.ref("Caleidoscopio");
+
 ref.on("value", function (snapshot) {
-  console.log(snapshot.val());
+  console.log('Read from firebase:Caleidoscopio=' , snapshot.val());
 });
 
 app.use(express.static("public"));
 
-server.listen(8080, function () {
+
+server.listen(8081, function () {
   console.log("Server listening");
 });
 
-//websockets
-io.on("connection", function (argument) {
-  console.log("new connection");
+
+io.on('connection', (socket) => {
+  socket.on('modulateKaleidValue', (value) => {
+    console.log('modulateKaleidValue: ' + value);
+       db.ref('Caleidoscopio').set(value);
+  });
 });
+
