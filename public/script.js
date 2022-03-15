@@ -1,4 +1,5 @@
 //envia los eventos al servidor
+
 const socket = io();
 const canvas = document.getElementById("myCanvas");
 
@@ -22,18 +23,27 @@ var osc2 = 1;
 osc(30, 0.05, 1.4)
   .rotate(0, 0.5)
   .mult(osc(10, 0.1).modulate(osc(30).rotate(0, -0.15), 1))
-  .add(shape(4, 0.2, 1).color(() => r, () => g, () => b, 0.5))
-  .modulate(osc(6, 0, 1.5).brightness(-.5)
-  .modulate(noise(() => mod2).sub(gradient()), 1), () => mod)
+  .add(
+    shape(4, 0.2, 1).color(
+      () => r,
+      () => g,
+      () => b,
+      0.5
+    )
+  )
+  .modulate(
+    osc(6, 0, 1.5)
+      .brightness(-0.5)
+      .modulate(noise(() => mod2).sub(gradient()), 1),
+    () => mod
+  )
   .modulate(osc(21, 0.25, () => mod2))
   .modulateScale(osc(() => osc2))
   .modulateKaleid(osc(5), () => k)
-  .out(o0)
+  .out(o0);
 
-
-socket.on('hydra', function (data) {
+socket.on("hydra", function (data) {
   console.log(data);
 });
 
-
-socket.emit('hydra', {'data': data})
+socket.emit("hydra", { data: data });
