@@ -1,10 +1,8 @@
-//envia los eventos al servidor
 
 const canvas = document.getElementById("myCanvas");
 
 canvas.width = 1024;
 canvas.height = 1024;
-// create a new hydra-synth instance
 var hydra = new Hydra({
   canvas,
   detectAudio: false,

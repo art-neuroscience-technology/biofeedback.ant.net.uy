@@ -41,11 +41,22 @@ server.listen(8081, function () {
   console.log("Server listening");
 });
 
-
 io.on('connection', (socket) => {
-  socket.on('modulateKaleidValue', (value) => {
-    console.log('modulateKaleidValue: ' + value);
-       db.ref('Caleidoscopio').set(value);
-  });
+    socket.on('modulateKaleidValue', (value) => {
+    console.log(value);
+      //db.ref('Caleidoscopio').set(value);
+    });
+    socket.on('modValue', (value) => {
+    console.log(value);
+      //db.ref('Modulacion').set(value);
+    });
+     socket.on('mod2Value', (value) => {
+    console.log(value);
+      //db.ref('Modulacion2').set(value);
+    });
+    socket.on('osc2Value', (value) => {
+    console.log(value);
+      //db.ref('Oscilador2').set(value);
+    });
 });
 

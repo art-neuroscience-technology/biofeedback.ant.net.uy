@@ -14,12 +14,9 @@
   <body>
     <script src="socket.io/socket.io.js"></script>
     <script src="/script.js" defer></script>
-    <canvas id="myCanvas"></canvas>
-    
+    <canvas id="myCanvas"></canvas>  
     <main>
-      <!--div>50</div><input type="range"/-->
       <div id='modulateKaleid'>
-        <div id='modulateKaleidValue'></div>
         <input
           type="range"
           id="modulateKaleid"
@@ -31,7 +28,7 @@
         <label for="modulateKaleid">Caleidoscopio</label>
       </div>
 
-      <!--div>
+      <div>
         <input
           type="range"
           id="mod"
@@ -66,24 +63,27 @@
           oninput="osc2=this.value"
         />
         <label for="osc2">Oscilador2</label>
-      </div-->
+      </div>
 
     </main>
 
 
 
     <script>
-     
-      var rng = document.querySelector("input");
       var socket = io();
-  
-      read("keydown"); // include this to also allow keyboard control
+      const modules = ["modulateKaleid", "mod","mod2","osc2"];
+      
+      for (i = 0; i < modules.length; i++) {
+         var elem = document.querySelector('input[name="'+ modules[i] + '"]');
+         read("keydown", elem, modules[i] + "Value"); 
+      } 
 
-      function read(evtType) {
-        rng.addEventListener(evtType, function() {
-         socket.emit("modulateKaleidValue", rng.value)
+      function read(evtType, elem, key) {
+        elem.addEventListener(evtType, function() {
+         socket.emit(key, elem.value)
        })
       }
+
     </script>
 
   
