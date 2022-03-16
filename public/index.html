@@ -14,9 +14,11 @@
   <body>
     <script src="socket.io/socket.io.js"></script>
     <script src="/script.js" defer></script>
-    <canvas id="myCanvas"></canvas>  
+    <canvas id="myCanvas"></canvas>
+   
+
     <main>
-      <div id='modulateKaleid'>
+      <div>
         <input
           type="range"
           id="modulateKaleid"
@@ -67,24 +69,43 @@
 
     </main>
 
-
-
     <script>
-      var socket = io();
-      const modules = ["modulateKaleid", "mod","mod2","osc2"];
       
-      for (i = 0; i < modules.length; i++) {
-         var elem = document.querySelector('input[name="'+ modules[i] + '"]');
-         read("keydown", elem, modules[i] + "Value"); 
+      var socket = io();
+      
+      const modulesNames = ['Caleidoscopio', 'Modulacion','Modulacion2', 'Oscilador2']
+      const modules = ["modulateKaleid", "mod","mod2","osc2"];
+
+      //for each module:
+      for (let i = 0; i < modulesNames.length; i++) {
+
+        //set module buttom from firebase database
+        socket.on('setValue' + modulesNames[i], (value) => {
+          document.getElementById(modules[i]).value = value;
+        });
+      }
+
+    </script>
+    <script>
+      
+      var socket = io();
+      //for each module:
+      for (let i = 0; i < modulesNames.length; i++) {
+       //create listener
+       var elem = document.querySelector('input[name="'+ modules[i] + '"]');
+       console.log('Creating listener for', modules[i])
+       read("change", elem, modules[i] + "Value"); 
       } 
 
       function read(evtType, elem, key) {
         elem.addEventListener(evtType, function() {
+        console.log('listen event', key)
          socket.emit(key, elem.value)
        })
       }
 
     </script>
+
 
   
  

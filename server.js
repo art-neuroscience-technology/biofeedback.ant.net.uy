@@ -3,10 +3,14 @@ var express = require("express");
 var app = express();
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
+const port = process.env.PORT || 3000
 
 
+app.use(express.static("public"));
+
+
+//Connect to Firebase database
 var admin = require("firebase-admin");
-// Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
   credential: admin.credential.cert({
     type: "service_account",
@@ -28,35 +32,45 @@ admin.initializeApp({
 });
 
 var db = admin.database();
-var ref = db.ref("Caleidoscopio");
 
-ref.on("value", function (snapshot) {
-  console.log('Read from firebase:Caleidoscopio=' , snapshot.val());
+//Auxiliar functions
+
+function readFromFirebase(key, socket) {
+    var ref = db.ref(key);
+    ref.on("value", function (snapshot) {
+      console.log(key , snapshot.val());
+      socket.emit('setValue' + key, snapshot.val())
+    });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+} 
+
+//start the server
+server.listen(port, function () {
+  console.log("Server listening on ", port);
 });
 
-app.use(express.static("public"));
-
-
-server.listen(8081, function () {
-  console.log("Server listening");
-});
 
 io.on('connection', (socket) => {
-    socket.on('modulateKaleidValue', (value) => {
-    console.log(value);
-      //db.ref('Caleidoscopio').set(value);
-    });
-    socket.on('modValue', (value) => {
-    console.log(value);
-      //db.ref('Modulacion').set(value);
-    });
-     socket.on('mod2Value', (value) => {
-    console.log(value);
-      //db.ref('Modulacion2').set(value);
-    });
-    socket.on('osc2Value', (value) => {
-    console.log(value);
-      //db.ref('Oscilador2').set(value);
-    });
+
+    const modulesNames = ['Caleidoscopio', 'Modulacion','Modulacion2', 'Oscilador2']
+    const modules = ["modulateKaleid", "mod","mod2","osc2"];
+    
+    for (let i = 0; i < modulesNames.length; i++) {
+      
+      //listen for changes in Firebase
+      readFromFirebase(modulesNames[i], socket)
+
+      //listen for changes in module and save in Firebase
+      socket.on(modules[i] + 'Value', (value) => {
+        console.log('Saving', modulesNames[i], value)
+        db.ref(modulesNames[i]).set(value);
+      });
+    }
+
 });
 
