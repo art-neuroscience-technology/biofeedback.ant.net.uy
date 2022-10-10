@@ -1,6 +1,8 @@
 
 const canvas = document.getElementById("myCanvas");
 
+
+
 canvas.width = 1024;
 canvas.height = 1024;
 var hydra = new Hydra({
@@ -8,6 +10,7 @@ var hydra = new Hydra({
   detectAudio: false,
   enableStreamCapture: false,
 });
+
 
 var r = 0.3;
 var g = 1;
