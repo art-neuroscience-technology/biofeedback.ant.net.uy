@@ -29,7 +29,7 @@
           max="8"
           oninput="modulateKaleid=this.value"
         />
-        <label for="modulateKaleid">Caleidoscopio</label>
+        <label for="modulateKaleid">delta</label>
       </div>
 
       <div>
@@ -42,7 +42,7 @@
           step="0.001"
           oninput="mod=this.value"
         />
-        <label for="mod">Modulación</label>
+        <label for="mod">theta</label>
       </div>
       <div>
         <input
@@ -54,7 +54,7 @@
           step="0.001"
           oninput="mod2=this.value"
         />
-        <label for="mod2">Modulación2</label>
+        <label for="mod2">alfa</label>
       </div>
       <div>
         <input
@@ -66,7 +66,7 @@
           step="0.001"
           oninput="osc2=this.value"
         />
-        <label for="osc2">Oscilador2</label>
+        <label for="osc2">beta</label>
       </div>
 
     </main>
@@ -75,28 +75,23 @@
       
       var socket = io();
       
-      const modulesNames = ['Caleidoscopio', 'Modulacion','Modulacion2', 'Oscilador2']
+      const modulesNames = ['delta', 'theta','alfa', 'beta']
       const modules = ["modulateKaleid", "mod","mod2","osc2"];
 
-      //for each module:
       for (let i = 0; i < modulesNames.length; i++) {
-
-        //set module buttom from firebase database
-        socket.on('setValue' + modulesNames[i], (value) => {
+        socket.on('setValue_' + modulesNames[i], (value) => {
+          old_value = document.getElementById(modules[i]).value
           document.getElementById(modules[i]).value = value;
         });
       }
 
     </script>
     <script>
-      
-      var socket = io();
-      //for each module:
+    
       for (let i = 0; i < modulesNames.length; i++) {
        //create listener
        var elem = document.querySelector('input[name="'+ modules[i] + '"]');
        console.log('Creating listener for', modules[i])
-       read("change", elem, modules[i] + "Value"); 
       } 
 
       function read(evtType, elem, key) {
