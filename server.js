@@ -55,26 +55,25 @@ function transform_scale(old_value, old_min, old_max, new_min, new_max){
 
 function process_osc_message(oscMessage) { 
   var address = oscMessage.address
-  console.log(oscMessage)
   switch(address) {
     case '/muse/elements/delta_absolute':
-      new_value = transform_scale(oscMessage.args[1], -1, 1, 1, 8)
+      new_value = transform_scale(oscMessage.args[2], -1, 1, 1, 8)
       socket.emit('setValue_delta', new_value)
       break;
     case '/muse/elements/theta_absolute': 
-      new_value = transform_scale(oscMessage.args[1], -1, 1, 0, 0.5)
+      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 0.5)
       socket.emit('setValue_theta', new_value)
       break;
     case '/muse/elements/alfa_absolute':
-      new_value = transform_scale(oscMessage.args[1], -1, 1, 0, 0.5)
+      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 0.5)
       socket.emit('setValue_alfa', new_value)
       break;
     case '/muse/elements/beta_absolute':
-      new_value = transform_scale(oscMessage.args[1], -1, 1, 0, 50)
+      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 50)
       socket.emit('setValue_beta', new_value)
       break;
     case '/muse/elements/gamma_absolute':
-      new_value = transform_scale(oscMessage.args[0],-1, 1, -0.5, 0.5)
+      new_value = transform_scale(oscMessage.args[2],-1, 1, -0.5, 0.5)
       socket.emit('setValue_gamma', new_value)
       break;
     default:
