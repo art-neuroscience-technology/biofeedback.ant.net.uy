@@ -19,7 +19,7 @@ npm install socket.io-client -S
 # Start server
 
 ```bash 
-	PORT=8080
+	export PORT=8080
 	npm start 
 ``` 
 

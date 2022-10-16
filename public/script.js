@@ -19,6 +19,7 @@ var k = 4;
 var mod = 0;
 var mod2 = 0;
 var osc2 = 1;
+var brightness = -0.5;
 
 osc(30, 0.05, 1.4)
   .rotate(0, 0.5)
@@ -33,7 +34,7 @@ osc(30, 0.05, 1.4)
   )
   .modulate(
     osc(6, 0, 1.5)
-      .brightness(-0.5)
+      .brightness(brightness)
       .modulate(noise(() => mod2).sub(gradient()), 1),
     () => mod
   )

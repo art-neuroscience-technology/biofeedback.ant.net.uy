@@ -74,11 +74,11 @@ function process_osc_message(oscMessage) {
       socket.emit('setValue_beta', new_value)
       break;
     case '/muse/elements/gamma_absolute':
-      //new_value = transform_scale(oscMessage.args[0], -1, 1, 1, 8)
-      //socket.emit('setValueCaleidoscopio', new_value)
+      new_value = transform_scale(oscMessage.args[0],-1, 1, -0.5, 0.5)
+      socket.emit('setValue_gamma', new_value)
       break;
     default:
-      // code block
+      // skip
   }
 
 }
