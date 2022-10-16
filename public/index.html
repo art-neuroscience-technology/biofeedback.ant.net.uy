@@ -93,6 +93,7 @@
       for (let i = 0; i < modulesNames.length; i++) {
         socket.on('setValue_' + modulesNames[i], (value) => {
           old_value = document.getElementById(modules[i]).value
+          console.log('module>', modules[i],',value>' ,old_value)
           document.getElementById(modules[i]).value = value;
         });
       }
