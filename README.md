@@ -1,9 +1,9 @@
 # biofeedback.ant.net.uy
 
 This repository corresponds to BIOFEEDBACK-JAM exhibition 
-Modifies in real time what other person is watching  
+Recieves in real time OSC data and changes visuales in function of the values of frequencies corresponding to Muse S headband. 
 
-It is a javascript server that uses Firebase Database 
+It is a javascript server that uses Hydra to show visuals  
 
 # Install
 
@@ -12,7 +12,7 @@ Install npm and the following dependencies
 ```bash
 npm install express -S 
 npm install socket.io -S
-npm install firebase-admin -S
+npm install osc - S
 npm install socket.io-client -S
 ``` 
 
