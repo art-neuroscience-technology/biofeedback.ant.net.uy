@@ -87,8 +87,8 @@
       
       var socket = io();
       
-      const modulesNames = ['delta', 'theta','alfa', 'beta']
-      const modules = ["modulateKaleid", "mod","mod2","osc2"];
+      const modulesNames = ['delta', 'theta','alfa', 'beta', 'gamma']
+      const modules = ["modulateKaleid", "mod","mod2","osc2", 'brightness'];
 
       for (let i = 0; i < modulesNames.length; i++) {
         socket.on('setValue_' + modulesNames[i], (value) => {
