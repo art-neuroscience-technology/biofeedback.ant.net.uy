@@ -1,4 +1,0 @@
-npm install express -S 
-npm install socket.io -S
-npm install firebase-admin -S
-npm install socket.io-client -S
