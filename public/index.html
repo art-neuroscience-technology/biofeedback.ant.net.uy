@@ -17,96 +17,37 @@
     <script src="socket.io/socket.io.js"></script>
     <script src="/script.js" defer></script>
     <canvas id="myCanvas"></canvas>
+    
    
 
     <main>
-      <div>
         <input
-          type="range"
-          id="modulateKaleid"
-          name="modulateKaleid"
-          min="1"
-          max="8"
-          oninput="modulateKaleid=this.value"
+          type="text"
+          id="colors"
+          name="colors"
+          size="150"
+          oninput="colors=this.value"
         />
-        <label for="modulateKaleid">delta</label>
-      </div>
-
-      <div>
-        <input
-          type="range"
-          id="mod"
-          name="mod"
-          min="0"
-          max="0.5"
-          step="0.001"
-          oninput="mod=this.value"
-        />
-        <label for="mod">theta</label>
-      </div>
-      <div>
-        <input
-          type="range"
-          id="mod2"
-          name="mod2"
-          min="0"
-          max="0.5"
-          step="0.001"
-          oninput="mod2=this.value"
-        />
-        <label for="mod2">alfa</label>
-      </div>
-      <div>
-        <input
-          type="range"
-          id="osc2"
-          name="osc2"
-          min="0"
-          max="50"
-          step="0.001"
-          oninput="osc2=this.value"
-        />
-        <label for="osc2">beta</label>
-      </div>
-        <div>
-        <input
-          type="range"
-          id="brightness"
-          name="brightness"
-          min="-0.5"
-          max="0.5"
-          step="0.001"
-          oninput="brightness=this.value"
-        />
-        <label for="brightness">gamma</label>
-      </div>
-
-
+     
     </main>
 
     <script>
       
-      var socket = io();
-      
-      const modulesNames = ['delta', 'theta','alfa', 'beta', 'gamma']
-      const modules = ["modulateKaleid", "mod","mod2","osc2", 'brightness'];
+      var socket = io(); 
+      var value;
 
-      for (let i = 0; i < modulesNames.length; i++) {
-        socket.on('setValue_' + modulesNames[i], (value) => {
-          old_value = document.getElementById(modules[i]).value
-          console.log('module>', modules[i],',value>' ,old_value)
-          document.getElementById(modules[i]).value = value;
+
+      socket.on('setValue_color', (value) => {
+          document.getElementById('colors').value = value;
         });
-      }
+
+    </script>
 
     </script>
     <script>
-    
-      for (let i = 0; i < modulesNames.length; i++) {
-       //create listener
-       var elem = document.querySelector('input[name="'+ modules[i] + '"]');
-       console.log('Creating listener for', modules[i])
-      } 
+        var elem = document.querySelector('input[name=colors');
+        console.log('Creating listeners for colors')
+      
 
       function read(evtType, elem, key) {
         elem.addEventListener(evtType, function() {
@@ -116,7 +57,7 @@
       }
 
     </script>
-
+    
 
   
  

@@ -35,7 +35,7 @@ var getIPAddresses = function () {
 
 var udpPort = new osc.UDPPort({
     localAddress: "0.0.0.0",
-    localPort: 5001
+    localPort: 5003
 });
 
 udpPort.on("ready", function () {
@@ -48,33 +48,12 @@ udpPort.on("ready", function () {
 });
 
 
-function transform_scale(old_value, old_min, old_max, new_min, new_max){
-  new_value = ( (old_value - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min
-  return new_value
-}
 
 function process_osc_message(oscMessage) { 
   var address = oscMessage.address
   switch(address) {
-    case '/muse/elements/delta_absolute':
-      new_value = transform_scale(oscMessage.args[2], -1, 1, 1, 8)
-      socket.emit('setValue_delta', new_value)
-      break;
-    case '/muse/elements/theta_absolute': 
-      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 0.5)
-      socket.emit('setValue_theta', new_value)
-      break;
-    case '/muse/elements/alfa_absolute':
-      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 0.5)
-      socket.emit('setValue_alfa', new_value)
-      break;
-    case '/muse/elements/beta_absolute':
-      new_value = transform_scale(oscMessage.args[2], -1, 1, 0, 50)
-      socket.emit('setValue_beta', new_value)
-      break;
-    case '/muse/elements/gamma_absolute':
-      new_value = transform_scale(oscMessage.args[2],-1, 1, -0.5, 0.5)
-      socket.emit('setValue_gamma', new_value)
+    case '/colors':
+      socket.emit('setValue_color', oscMessage.args);
       break;
     default:
       // skip
@@ -84,7 +63,8 @@ function process_osc_message(oscMessage) {
 
 
 udpPort.on("message", function (oscMessage) {
-    process_osc_message(oscMessage)
+    console.log(oscMessage);
+    process_osc_message(oscMessage);
 });
 
 udpPort.on("error", function (err) {

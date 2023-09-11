@@ -1,7 +1,4 @@
-
 const canvas = document.getElementById("myCanvas");
-
-
 
 canvas.width = 1024;
 canvas.height = 1024;
@@ -12,34 +9,26 @@ var hydra = new Hydra({
 });
 
 
-var r = 0.3;
-var g = 1;
-var b = 1;
-var k = 4;
-var mod = 0;
-var mod2 = 0;
-var osc2 = 1;
-var brightness = -0.5;
+// Set up an interval to continuously check for changes in the colors array and update visuals
+setInterval(updateVisuals, 300); // Adjust the interval time as needed
 
-osc(30, 0.05, 1.4)
-  .rotate(0, 0.5)
-  .mult(osc(10, 0.1).modulate(osc(30).rotate(0, -0.15), 1))
-  .add(
-    shape(4, 0.2, 1).color(
-      () => r,
-      () => g,
-      () => b,
-      0.5
-    )
-  )
-  .modulate(
-    osc(6, 0, 1.5)
-      .brightness(brightness)
-      .modulate(noise(() => mod2).sub(gradient()), 1),
-    () => mod
-  )
-  .modulate(osc(21, 0.25, () => mod2))
-  .modulateScale(osc(() => osc2))
-  .modulateKaleid(osc(5), () => k)
-  .out(o0);
+// Function to update visuals based on the colors array
+function updateVisuals() {
+  var colors = document.getElementById('colors').value
+  colors = colors.split(',')
+  speed=8
+  shape(99,.15,.5).color(colors[0],colors[1], colors[2])
 
+  .diff( shape(240,.5,0).scrollX(.05).rotate( ()=>time/10 ).color(colors[3],colors[4], colors[5]) )
+  .diff( shape(99,.4,.002).scrollX(.10).rotate( ()=>time/20 ).color(colors[6],colors[7], colors[8]) )
+  .diff( shape(99,.3,.002).scrollX(.15).rotate( ()=>time/30 ).color(colors[0],colors[1], colors[2]) )
+  .diff( shape(99,.2,.002).scrollX(.20).rotate( ()=>time/40 ).color(colors[3],colors[4], colors[5]) )
+  .diff( shape(99,.1,.002).scrollX(.25).rotate( ()=>time/50 ).color(colors[6],colors[7], colors[8]) )
+
+  .modulateScale(
+    shape(240,.5,0).scrollX(.05).rotate( ()=>time/10 )
+    , ()=>(Math.sin(time/3)*.2)+.2 )
+
+  .scale(1.6,.6,1)
+  .out()
+}
