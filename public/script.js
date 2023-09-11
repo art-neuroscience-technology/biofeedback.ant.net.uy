@@ -8,7 +8,6 @@ var hydra = new Hydra({
   enableStreamCapture: false,
 });
 
-
 // Set up an interval to continuously check for changes in the colors array and update visuals
 setInterval(updateVisuals, 300); // Adjust the interval time as needed
 
