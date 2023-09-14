@@ -19,6 +19,6 @@
     "osc": "^2.4.3",
     "osc-js": "^2.4.0",
     "socket.io": "^4.7.2",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.7.2"
   }
 }
