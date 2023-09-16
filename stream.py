@@ -1,7 +1,7 @@
 from pylsl import StreamInlet, resolve_byprop
 from pythonosc import udp_client
 from threading import Thread
-from time import sleep
+import time 
 import numpy as np  # Module that simplifies computations on matrices
 import matplotlib.pyplot as plt  # Module used for plotting
 from pylsl import StreamInlet, resolve_byprop  # Module to receive EEG data
@@ -36,11 +36,14 @@ SHIFT_LENGTH = EPOCH_LENGTH - OVERLAP_LENGTH
 # 0 = left ear, 1 = left forehead, 2 = right forehead, 3 = right ear 'TP9','AF7','AF8','TP10'
 INDEX_CHANNEL = [0,1,2,3]
 
+STREAM_SECS = 10
 
 class LslToOscStreamer:
 
-    def __init__(self, host, port, stream_channels):
-        self.client = udp_client.SimpleUDPClient(host, port)
+    def __init__(self, host, ports, stream_channels):
+        self.clients = []
+        for port in ports:
+            self.clients.append(udp_client.SimpleUDPClient(host, port))
         self.inlet = None
         self.stream_channels = stream_channels
         self.is_streaming = False
@@ -54,18 +57,24 @@ class LslToOscStreamer:
         self.band_buffer = np.zeros((n_win_test, 4))
         self.fs = 0
         self.eeg_buffer = None
+        self.sent_osc = 0
 
         
 
     def connect(self, prop='type', value='EEG'):
-        streams = resolve_byprop(prop, value, timeout=5)
-        self.inlet = StreamInlet(streams[0], max_chunklen=12)
-        eeg_time_correction = self.inlet.time_correction()
-        info = self.inlet.info()
-        self.fs = int(info.nominal_srate())
-        self.eeg_buffer = np.zeros((int(self.fs * BUFFER_LENGTH), 1))
+        try:
+            streams = resolve_byprop(prop, value, timeout=5)
+            self.inlet = StreamInlet(streams[0], max_chunklen=12)
+            eeg_time_correction = self.inlet.time_correction()
+            info = self.inlet.info()
+            self.fs = int(info.nominal_srate())
+            self.eeg_buffer = np.zeros((int(self.fs * BUFFER_LENGTH), 1))
+        
+        except Exception as ex:
+            print(ex)
+            
         return self.inlet is not None
-    
+            
     def get_eeg_data(self):
         # Obtain EEG data from the LSL stream
         eeg_data, timestamp = self.inlet.pull_chunk(
@@ -76,7 +85,6 @@ class LslToOscStreamer:
         beta = []
         gamma = []
         for i in INDEX_CHANNEL:
-            print(i)
             ch_data = np.array(eeg_data)[:, i]
 
             # Update EEG buffer with the new data
@@ -104,21 +112,34 @@ class LslToOscStreamer:
             gamma.append(math.log(smooth_band_powers[Band.Beta]))
         return delta, theta, alpha, beta, gamma
 
+    
+    def send_message(self, channel, message):
+        for client in self.clients:
+            client.send_message(channel, message)
+            
     def stream_data(self):
-        if self.inlet is None:
-            raise Exception("LSL stream is not connected")
-        self.is_streaming = True
-        streaming_thread = Thread(target=self._stream_handler)
-        streaming_thread.setDaemon(True)
-        streaming_thread.start()
-
-    def _stream_handler(self):
-        while self.is_streaming:
-            values = self.get_eeg_data()
-            for channel_idx, channel in enumerate(self.stream_channels):
-                print(channel, values[channel_idx])
-                self.client.send_message(channel, values[channel_idx])
-
+        while self.inlet is None:
+            print("LSL stream is not connected")
+            time.sleep(STREAM_SECS)
+            self.connect()
+        self.stream_handler()    
+            
+            
+    def stream_handler(self):
+        while True:
+            try:
+                values = self.get_eeg_data()
+                if time.time() - self.sent_osc > STREAM_SECS:
+                    for channel_idx, channel in enumerate(self.stream_channels):
+                        print(channel, values[channel_idx])
+                        self.send_message(channel, values[channel_idx])
+                        self.sent_osc = time.time()
+                        
+            except Exception as ex:
+                print('Error:',ex)
+                time.sleep(STREAM_SECS)
+                
+                
     def close_stream(self):
         self.is_streaming = False
         self.inlet.close_stream()
@@ -126,8 +147,7 @@ class LslToOscStreamer:
 
 if __name__ == "__main__":
     host = "127.0.0.1"
-    port = 5001
-    stream_time_sec = 3600
+    ports = [5000,5001]
     muse_channels = [
         "/muse/elements/delta_absolute",
         "/muse/elements/theta_absolute",
@@ -136,11 +156,10 @@ if __name__ == "__main__":
         "/muse/elements/gamma_absolute",
     ]
 
-    streamer = LslToOscStreamer(host, port, muse_channels)
+    streamer = LslToOscStreamer(host, ports, muse_channels)
     streamer.connect()
-
-    print("Start streaming data to {}:{} for {} seconds".format(host, port, stream_time_sec))
     streamer.stream_data()
-    sleep(stream_time_sec)
-    streamer.close_stream()
-    print("Stopped streaming. Exiting program...")
+
+    #time.sleep(STREAM_SECS)
+    #streamer.close_stream()
+    #print("Stopped streaming. Exiting program...")

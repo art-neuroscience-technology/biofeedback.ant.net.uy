@@ -25,6 +25,8 @@ if __name__ == "__main__":
 while(True):
   for waves_name in waves_names:
     client.send_message(f"/colors", 
-      [random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1),random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1),random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1)])
+      [random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1),
+       random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1),
+       random.uniform(0, 1), random.uniform(0, 1), random.uniform(0,1)])
   time.sleep(1)
 
