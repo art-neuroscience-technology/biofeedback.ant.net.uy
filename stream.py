@@ -2,10 +2,10 @@ from pylsl import StreamInlet, resolve_byprop
 from pythonosc import udp_client
 from threading import Thread
 import time 
-import numpy as np  # Module that simplifies computations on matrices
-import matplotlib.pyplot as plt  # Module used for plotting
+import numpy as np  
+import matplotlib.pyplot as plt 
 from pylsl import StreamInlet, resolve_byprop  # Module to receive EEG data
-import utils  # Our own utility functions
+import utils
 import math 
 
 
@@ -36,7 +36,7 @@ SHIFT_LENGTH = EPOCH_LENGTH - OVERLAP_LENGTH
 # 0 = left ear, 1 = left forehead, 2 = right forehead, 3 = right ear 'TP9','AF7','AF8','TP10'
 INDEX_CHANNEL = [0,1,2,3]
 
-STREAM_SECS = 10
+STREAM_SECS = 5
 
 class LslToOscStreamer:
 
@@ -159,7 +159,3 @@ if __name__ == "__main__":
     streamer = LslToOscStreamer(host, ports, muse_channels)
     streamer.connect()
     streamer.stream_data()
-
-    #time.sleep(STREAM_SECS)
-    #streamer.close_stream()
-    #print("Stopped streaming. Exiting program...")

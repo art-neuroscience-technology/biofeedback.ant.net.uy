@@ -43,9 +43,9 @@ canvas {
 }
 
 input {
-  width: 100%;
+  width: 20%;
   padding: 16px 20px;
   border: none;
   border-radius: 4px;
-  background-color: #f1f1f1;
+  background-color: black;
 }
